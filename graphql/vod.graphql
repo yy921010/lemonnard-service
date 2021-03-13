@@ -1,0 +1,45 @@
+type Query{
+    vod(id:String):Vod
+}
+
+type Genre{
+    id:String
+    name:String
+}
+
+type Vod {
+    id:String
+    title:String
+    subtitle:String
+    time:String
+    rate:String
+    description:String
+    images:[Image]
+    trailerUrl:String
+    language:String
+    genres:[Genre]
+    actors:[Actor]
+    seasons:[Season]
+}
+
+type Actor{
+    id:String
+    name:String
+    images:[Image]
+}
+
+type Season{
+    id:String
+    name:String
+    episodes:[Episode]
+}
+
+type Episode{
+    id:String
+    title:String
+    playDuration:String
+    episodeNumber:Int
+    description:String
+    images:[Image]
+    playUrl:String
+}

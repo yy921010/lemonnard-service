@@ -1,0 +1,15 @@
+
+type Image{
+    href:String
+    type:Int
+}
+
+type Menu{
+    id:String
+    name:String
+    images:[Image]
+}
+
+type Query{
+    menu:[Menu!]
+}

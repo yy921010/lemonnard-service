@@ -1,0 +1,12 @@
+app:
+  profiles: dev
+  mongo:
+    uri: mongodb://localhost/tmk
+  oAuth2Service:
+    transport: 4
+    options:
+      url: localhost:33207
+      package:
+        - oauth
+      protoPath:
+        - resource/protobufs/oauth2.proto

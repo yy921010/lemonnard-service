@@ -1,0 +1,52 @@
+type Query{
+    navigator(id:String=1):Navigator
+} 
+
+type Image{
+    href:String
+    type:Int
+}
+
+type Navigator {
+    id:String!
+    theme:Theme
+    contents:[Content]
+}
+
+type Theme{
+    colors:[String!]
+    images:[Image]
+    metaInformation:MetaInformation
+}
+
+type MetaInformation{
+    description:String
+    keywords:String
+    title:String
+}
+
+type Content{
+    type:String
+    id:String
+    laneTitle:String
+    coloredTitles:[ColoredTitle]
+    laneContentLink:String
+    teasers:[Vod]
+}
+
+type ColoredTitle{
+    title:String
+    color:String
+}
+
+type Vod {
+    id:String
+    title:String
+    subtitle:String
+    time:String
+    rate:String
+    description:String
+    images:[Image]
+    trailerUrl:String
+    language:String
+}

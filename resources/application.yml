@@ -1,0 +1,61 @@
+app:
+  profiles:
+    active: dev
+  port: 3000
+  log:
+    appenders:
+      console:
+        type: console
+      access:
+        type: dateFile
+        filename: /Users/charles/Desktop/hadron-logs/access/access.log
+        alwaysIncludePattern: true
+        pattern: yyyy-MM-dd
+        daysToKeep: 60
+        numBackups: 3
+        keepFileExt: true
+      appLog:
+        type: dateFile
+        filename: /Users/charles/Desktop/hadron-logs/app-out/app.log
+        alwaysIncludePattern: true
+        pattern: yyyy-MM-dd
+        daysToKeep: 60
+        numBackups: 3
+        category: http
+        keepFileExt: true
+      errorFile:
+        type: dateFile
+        filename: /Users/charles/Desktop/hadron-logs/error/error.log
+        alwaysIncludePattern: true
+        pattern: yyyy-MM-dd
+        daysToKeep: 60
+        numBackups: 3
+        keepFileExt: true
+      errors:
+        type: logLevelFilter
+        level: ERROR
+        appender: errorFile
+    categories:
+      default:
+        appenders:
+          - console
+          - appLog
+          - errors
+        level: debug
+      info:
+        appenders:
+          - console
+          - appLog
+          - errors
+        level: info
+      access:
+        appenders:
+          - console
+          - appLog
+          - errors
+        level: info
+      http:
+        appenders:
+          - console
+          - access
+        level: info
