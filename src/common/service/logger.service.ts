@@ -7,7 +7,7 @@ export class Log4JService implements LoggerService {
   private lo4j: Log4js;
 
   constructor(private readonly configService: ConfigService) {
-    const log4jsConfig = configService.get('log') as Configuration;
+    const log4jsConfig = configService.get<Configuration>('log');
     this.lo4j = configure(log4jsConfig);
   }
 

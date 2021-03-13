@@ -5,7 +5,7 @@ import { ConfigToken } from '../interface/config.interface';
 export class ConfigService {
   constructor(@Inject(ConfigToken.GLOBAL_CONFIG_TOKEN) private yamlFile = []) {}
 
-  get(key: string): Record<string, any> | string | any[] | number | any {
-    return this.yamlFile[key] || '';
+  get<T>(key: string): T {
+    return this.yamlFile[key] as T;
   }
 }

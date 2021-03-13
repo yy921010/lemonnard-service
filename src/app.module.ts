@@ -20,7 +20,7 @@ import { HelperModule } from './helper';
         logger
           .getLogger(AppModule.name)
           .info('[mongo config]', configService.get('mongo'));
-        return configService.get('mongo') as MongooseModuleOptions;
+        return configService.get<MongooseModuleOptions>('mongo');
       },
       inject: [ConfigService, Log4JService],
     }),

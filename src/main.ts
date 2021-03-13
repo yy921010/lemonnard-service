@@ -9,7 +9,7 @@ async function bootstrap() {
   const log4jService = app.get(Log4JService);
   const configService = app.get(ConfigService);
   app.useLogger(log4jService);
-  await app.listen(configService.get('port'));
+  await app.listen(configService.get<number>('port'));
   return app;
 }
 
