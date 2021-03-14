@@ -9,6 +9,7 @@ import {
   Log4JService,
 } from './common';
 import { HelperModule } from './helper';
+import { VodModule } from './vod/vod.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { HelperModule } from './helper';
       },
     }),
     HelperModule,
+    VodModule,
   ],
   controllers: [AppController],
   providers: [AppService],
