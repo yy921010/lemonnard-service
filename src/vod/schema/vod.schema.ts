@@ -41,10 +41,12 @@ export class Vod extends Document {
     default: [],
   })
   language: string[];
+  //需要多对多
   @Prop({
     type: [GenreSchema],
   })
   genres: Genre[];
+  //需要多对多
   @Prop({
     type: [CastStaffSchema],
   })
