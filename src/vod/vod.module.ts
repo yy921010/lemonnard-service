@@ -8,6 +8,7 @@ import { Episode, EpisodeSchema } from './schema/episode.schema';
 import { Genre, GenreSchema } from './schema/genre.schema';
 import { Image, ImageSchema } from './schema/image.schema';
 import { Season, SeasonSchema } from './schema/season.schema';
+import { VodController } from './controller/vod.controller';
 
 @Module({
   imports: [
@@ -59,7 +60,7 @@ import { Season, SeasonSchema } from './schema/season.schema';
     ]),
   ],
   providers: [VodService],
-  controllers: [],
+  controllers: [VodController],
   exports: [VodService],
 })
 export class VodModule {}
