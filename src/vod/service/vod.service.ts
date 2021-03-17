@@ -3,16 +3,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Logger } from 'log4js';
 import { Model } from 'mongoose';
+import { Genre } from '../schema/genre.schema';
 import { Image } from '../schema/image.schema';
-import { Vod } from '../schema/vod.schema';
+import { Vod, VodDocument } from '../schema/vod.schema';
 
 @Injectable()
 export class VodService {
   private logger: Logger;
   constructor(
     private readonly log4j: Log4JService,
-    @InjectModel(Vod.name) private readonly vodModel: Model<Vod>,
+    @InjectModel(Vod.name) private readonly vodModel: Model<VodDocument>,
     @InjectModel(Image.name) private readonly imageModel: Model<Image>,
+    @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
   ) {
     this.logger = this.log4j.getLogger(VodService.name);
   }
@@ -21,8 +23,19 @@ export class VodService {
     this.logger.debug('[saveVod] vodInfo = ', vodInfo);
     if (vodInfo) {
       const createVodModel = new this.vodModel(vodInfo);
-      const saveResult = await createVodModel.save();
-      this.logger.debug('[saveVod] saveResult = ', saveResult);
+      createVodModel.save(async (err) => {
+        if (err) {
+          this.logger.error('[saveVod] err = ', err);
+          return;
+        }
+        const createGenreModel = new this.genreModel({
+          type: '1',
+          name: 'demo',
+          vodIds: createVodModel._id,
+        });
+        await createGenreModel.save();
+      });
+      this.logger.debug('[saveVod] saveResult = ');
     }
   }
 

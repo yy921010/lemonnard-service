@@ -2,6 +2,10 @@ app:
   profiles: dev
   mongo:
     uri: mongodb://localhost/tmk
+    # mongoose 在连接时会自动建立 schema 的索引。
+    # 大型生产环境下不是十分理想，所以链接生产环境需要去除索引
+    autoIndex: true
+    autoReconnect: true
   oAuth2Service:
     transport: 4
     options:

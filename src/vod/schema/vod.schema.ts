@@ -1,10 +1,11 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as SchemaMongoose } from 'mongoose';
 import { CastStaff, CastStaffSchema } from './cast-staff.schema';
 import { Genre, GenreSchema } from './genre.schema';
 import { Image, ImageSchema } from './image.schema';
 import { Season, SeasonSchema } from './season.schema';
 
+export type VodDocument = Vod;
 @Schema()
 export class Vod extends Document {
   @Prop({
@@ -43,12 +44,22 @@ export class Vod extends Document {
   language: string[];
   //需要多对多
   @Prop({
-    type: [GenreSchema],
+    type: [
+      {
+        type: SchemaMongoose.Types.ObjectId,
+        ref: 'Genre',
+      },
+    ],
   })
-  genres: Genre[];
+  genreIds: string[];
   //需要多对多
   @Prop({
-    type: [CastStaffSchema],
+    type: [
+      {
+        type: SchemaMongoose.Types.ObjectId,
+        ref: 'CastStaff',
+      },
+    ],
   })
   castStaff: CastStaff[];
   @Prop({
