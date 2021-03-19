@@ -1,8 +1,8 @@
 import { Log4JService } from '@/common';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Logger } from 'log4js';
-import { Vod } from '../schema/vod.schema';
 import { VodService } from '../service/vod.service';
+import { Vod } from '../types/vod.type';
 
 @Controller('vod')
 export class VodController {
@@ -14,9 +14,42 @@ export class VodController {
     this.logger = this.log4j.getLogger(VodController.name);
   }
 
-  @Post()
+  @Get()
   async saveVod(@Body() vodInfo: Vod) {
     this.logger.info('[saveVod] vodInfo = ', vodInfo);
-    return await this.vodService.saveVod(vodInfo);
+    return await this.vodService.saveVod({
+      title: 'demo',
+      subtitle: 'subtitle',
+      introduce: 'introduce',
+      time: '20201710292',
+      rating: 9.4,
+      images: [
+        {
+          type: 1,
+          href: 'http://localhost/img3',
+        },
+        {
+          type: 1,
+          href: 'http://localhost/img2',
+        },
+      ],
+      language: [
+        {
+          name: 's',
+        },
+      ],
+      genres: [
+        {
+          name: 'ssss',
+          type: 1,
+        },
+        {
+          name: '惊悚',
+          type: 2,
+        },
+      ],
+      castStaff: [],
+      seasons: [],
+    });
   }
 }

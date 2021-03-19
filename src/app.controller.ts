@@ -15,10 +15,7 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-  @Post()
-  saveVod(@Body() vodInfo: Vod) {
-    this.vodService.saveVod(vodInfo);
-  }
+
   @Post('/image')
   saveImage(@Body() img: Image) {
     this.vodService.saveImage(img);

@@ -5,7 +5,8 @@ import { Logger } from 'log4js';
 import { Model } from 'mongoose';
 import { Genre } from '../schema/genre.schema';
 import { Image } from '../schema/image.schema';
-import { Vod, VodDocument } from '../schema/vod.schema';
+import { VodDocument } from '../schema/vod.schema';
+import { Vod } from '../types/vod.type';
 
 @Injectable()
 export class VodService {
@@ -29,9 +30,9 @@ export class VodService {
           return;
         }
         const createGenreModel = new this.genreModel({
-          type: '1',
-          name: 'demo',
-          vodIds: createVodModel._id,
+          type: '2',
+          name: 'demo2',
+          vods: createVodModel._id,
         });
         await createGenreModel.save();
       });

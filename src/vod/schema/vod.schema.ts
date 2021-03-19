@@ -1,7 +1,6 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { Document, Schema as SchemaMongoose } from 'mongoose';
-import { CastStaff, CastStaffSchema } from './cast-staff.schema';
-import { Genre, GenreSchema } from './genre.schema';
+import { CastStaff } from './cast-staff.schema';
 import { Image, ImageSchema } from './image.schema';
 import { Season, SeasonSchema } from './season.schema';
 
@@ -51,7 +50,7 @@ export class Vod extends Document {
       },
     ],
   })
-  genreIds: string[];
+  genres: string[];
   //需要多对多
   @Prop({
     type: [

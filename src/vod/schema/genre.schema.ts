@@ -21,7 +21,7 @@ export class Genre extends Document {
       },
     ],
   })
-  vodIds: string[];
+  vods: string[];
 }
 
 export const GenreSchema = SchemaFactory.createForClass(Genre);

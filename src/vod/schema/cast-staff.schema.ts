@@ -12,7 +12,7 @@ export class CastStaff extends Document {
   @Prop({
     type: [ImageSchema],
   })
-  images: [Image];
+  images: Image[];
 
   //1 演员 2 导演
   @Prop({
