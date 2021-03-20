@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
+import { ConnectionOptions } from 'mysql2';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {
@@ -9,19 +10,20 @@ import {
   Log4JService,
 } from './common';
 import { HelperModule } from './helper';
+import { MysqlModule } from './mysql2';
 import { VodModule } from './vod/vod.module';
 
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
+    MysqlModule.forRootAsync({
       useFactory: async (
         configService: ConfigService,
         logger: Log4JService,
       ) => {
         logger
-          .getLogger(AppModule.name)
-          .info('[mongo config]', configService.get('mongo'));
-        return configService.get<MongooseModuleOptions>('mongo');
+          .getLogger(MysqlModule.name)
+          .info('[config]', configService.get('mysql'));
+        return configService.get<ConnectionOptions>('mysql');
       },
       inject: [ConfigService, Log4JService],
     }),

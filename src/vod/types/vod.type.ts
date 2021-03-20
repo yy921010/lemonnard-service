@@ -4,6 +4,7 @@ import { Genre } from './genre.type';
 import { CastStaff } from './cast-staff.type';
 import { Season } from './season.type';
 import { Language } from './language.type';
+import { PlaySource } from './play-sources.type';
 export class Vod {
   _id?: string;
   @IsString()
@@ -11,9 +12,11 @@ export class Vod {
   @IsString()
   subtitle: string;
   @IsString()
+  originTitle: string;
+  @IsString()
   introduce: string;
   @IsString()
-  time: string;
+  year: string;
   @IsNumber()
   rating: number;
   @ValidateNested()
@@ -26,4 +29,6 @@ export class Vod {
   castStaff: CastStaff[];
   @ValidateNested()
   seasons: Season[];
+  @ValidateNested()
+  playSources: PlaySource[];
 }

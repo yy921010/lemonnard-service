@@ -37,34 +37,10 @@ export class Vod extends Document {
   })
   images: Image[];
   @Prop({
-    type: [String],
-    default: [],
+    type: String,
+    default: '',
   })
-  language: string[];
-  //需要多对多
-  @Prop({
-    type: [
-      {
-        type: SchemaMongoose.Types.ObjectId,
-        ref: 'Genre',
-      },
-    ],
-  })
-  genres: string[];
-  //需要多对多
-  @Prop({
-    type: [
-      {
-        type: SchemaMongoose.Types.ObjectId,
-        ref: 'CastStaff',
-      },
-    ],
-  })
-  castStaff: CastStaff[];
-  @Prop({
-    type: [SeasonSchema],
-  })
-  seasons: Season[];
+  originTitle: string;
 }
 
 export const VodSchema = SchemaFactory.createForClass(Vod);

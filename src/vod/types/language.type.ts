@@ -3,4 +3,5 @@ export class Language {
   @IsString()
   name: string;
   id?: string;
+  vodIds: string[];
 }
