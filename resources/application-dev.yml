@@ -4,7 +4,7 @@ app:
     host: 127.0.0.1
     user: root
     password: '12345678'
-    database: tmk
+    database: lemon_local
     waitForConnections: true
     connectionLimit: 10
     queueLimit: 0

@@ -13,6 +13,8 @@ export class VodService {
 
   async saveVod(vodInfo: Vod) {
     this.logger.debug('[saveVod] vodInfo = ', vodInfo);
+    this.logger.info('[saveVod] enter');
+    const insertVodTable = `insert into tf_b_vod (name, sub_title,)`;
   }
 
   async saveImage(image: Image) {
