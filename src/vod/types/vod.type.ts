@@ -6,9 +6,11 @@ import { Season } from './season.type';
 import { Language } from './language.type';
 import { PlaySource } from './play-sources.type';
 export class Vod {
-  _id?: string;
+  id?: string;
   @IsString()
   title: string;
+  @IsNumber()
+  type: number;
   @IsString()
   subtitle: string;
   @IsString()

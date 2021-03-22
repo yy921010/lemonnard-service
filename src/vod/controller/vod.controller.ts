@@ -19,6 +19,7 @@ export class VodController {
     this.logger.info('[saveVod] vodInfo = ', vodInfo);
     return await this.vodService.saveVod({
       title: '波斯语课',
+      type: 1,
       originTitle: 'Persischstunden',
       subtitle: 'Persischstunden',
       introduce: 'introduce',
@@ -122,7 +123,7 @@ export class VodController {
           episodes: [
             {
               playDuration: '20',
-              episodeNumber: 1,
+              episodeNumber: 2,
               title: '第一集',
               introduce: '第一集介绍',
               images: [

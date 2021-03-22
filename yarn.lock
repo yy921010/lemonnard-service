@@ -6705,10 +6705,10 @@ mysql2@^2.2.5:
     seq-queue "^0.0.5"
     sqlstring "^2.3.2"
 
-mysqlnard@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/mysqlnard/-/mysqlnard-1.0.2.tgz#a02ae0b90ffca666df3345860e532a8c6408029b"
-  integrity sha512-ZX9pudjGekn9Hqe0B33IXp7RA7Eblo05UAqzyrIv5KJkWKo9pDJoTgzYUCR8TrupHVjK3pKBiam3A/B0XOfXAQ==
+mysqlnard@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/mysqlnard/-/mysqlnard-1.0.3.tgz#2c45ea5b7e0166c974219e16f56a4fc370527501"
+  integrity sha512-qXTSc8WvlmtWVex9AWL24O9glfjXTXayN1iOOQFInxc9jHx4lEPrKpc2/rT0uL+BQhbI9SlLx+3MjD1z+aXHlQ==
   dependencies:
     sqlstring "^2.3.2"
     ts-jest "^26.4.4"

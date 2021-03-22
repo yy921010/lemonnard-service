@@ -1,7 +1,7 @@
 import { IsString, ValidateNested } from 'class-validator';
 import { Episode } from './Episode.type';
 export class Season {
-  _id?: string;
+  id?: string;
   @IsString()
   title: string;
   @IsString()
