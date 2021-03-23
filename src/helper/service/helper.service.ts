@@ -63,4 +63,35 @@ export class HelperService {
     src += cipher.final('utf8');
     return src;
   }
+
+  flatten(arr, depth = 1) {
+    return arr.reduce(
+      (a, v) =>
+        a.concat(
+          depth > 1 && Array.isArray(v) ? this.flatten(v, depth - 1) : v,
+        ),
+      [],
+    );
+  }
+
+  toSnakeCase(str): string {
+    return (
+      str &&
+      str
+        .match(
+          /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g,
+        )
+        .map((x) => x.toLowerCase())
+        .join('_')
+    );
+  }
+
+  toColumField(obj = {}) {
+    const columObj = {};
+    Object.keys(obj).forEach((key) => {
+      const snakeKey = this.toSnakeCase(key);
+      columObj[snakeKey] = obj[key];
+    });
+    return columObj;
+  }
 }

@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { ConnectionOptions } from 'mysql2';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,7 +8,7 @@ import {
   HttpRequestMiddleware,
   Log4JService,
 } from './common';
-import { HelperModule } from './helper';
+import { HelperModule, HelperService } from './helper';
 import { MysqlModule } from './mysql2';
 import { VodModule } from './vod/vod.module';
 
