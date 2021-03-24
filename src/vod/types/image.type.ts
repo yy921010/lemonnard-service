@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 export class Image {
-  _id?: string;
+  id?: string;
   @IsNumber()
   type: number;
   @IsString()

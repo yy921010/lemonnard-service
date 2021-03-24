@@ -1,6 +1,7 @@
 import { ConfigService } from '@/common';
 import { Injectable } from '@nestjs/common';
 import { createHash, createCipheriv, createDecipheriv } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 const ObjProto = Object.prototype;
 const toString = ObjProto.toString,
   hasOwnProperty = ObjProto.hasOwnProperty;
@@ -19,6 +20,11 @@ export class HelperService {
   isArguments(obj): boolean {
     return toString.call(obj) === '[object Arguments]';
   }
+
+  isObject(obj): boolean {
+    return toString.call(obj) === '[object Object]';
+  }
+
   has(obj, key: string) {
     return obj != null && hasOwnProperty.call(obj, key);
   }
@@ -86,12 +92,29 @@ export class HelperService {
     );
   }
 
-  toColumField(obj = {}) {
+  toColumnField(obj = {}) {
     const columObj = {};
     Object.keys(obj).forEach((key) => {
       const snakeKey = this.toSnakeCase(key);
       columObj[snakeKey] = obj[key];
     });
     return columObj;
+  }
+
+  setArrayId<T>(array: any[] = []): T[] {
+    if (array.length === 0) {
+      return [];
+    }
+    return array.map((item) => {
+      if (this.isObject(item)) {
+        item.id = uuidv4();
+        Object.keys(item).forEach((keyItem) => {
+          if (this.isArray(item[keyItem])) {
+            this.setArrayId(item[keyItem]);
+          }
+        });
+      }
+      return item;
+    });
   }
 }

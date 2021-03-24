@@ -17,7 +17,5 @@ export class AppController {
   }
 
   @Post('/image')
-  saveImage(@Body() img: Image) {
-    this.vodService.saveImage(img);
-  }
+  saveImage(@Body() img: Image) {}
 }

@@ -1,7 +1,7 @@
 import { IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Image } from './image.type';
 export class CastStaff {
-  _id?: string;
+  id?: string;
   @IsString()
   name: string;
   @IsString()
