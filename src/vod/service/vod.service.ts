@@ -10,6 +10,9 @@ import { MysqlService } from '@/mysql2';
 import { CastStaffBean } from '@/vod/bean/cast-staff.bean';
 import { LanguageBean } from '@/vod/bean/language.bean';
 import { GenreBean } from '@/vod/bean/genre.bean';
+import { PlaySourceBean } from '@/vod/bean/play-source.bean';
+import { v4 as uuidv4 } from 'uuid';
+import { VodSqlService } from '@/vod/service/vod-sql.service';
 
 @Injectable()
 export class VodService {
@@ -19,6 +22,7 @@ export class VodService {
     private readonly log4j: Log4JService,
     private readonly helper: HelperService,
     private readonly mysql: MysqlService,
+    private readonly vodsqlSerivce: VodSqlService,
   ) {
     this.logger = this.log4j.getLogger(VodService.name);
   }
@@ -125,7 +129,7 @@ export class VodService {
 
   getBaseTableData4CastStaff(vodArrayIdHas: Vod[]) {
     const castStaffBean = new CastStaffBean();
-    vodArrayIdHas.map(({ castStaff, id }) => {
+    return vodArrayIdHas.map(({ castStaff, id }) => {
       const castStaffs = castStaff.map((cast) => {
         return {
           ...castStaffBean,
@@ -144,7 +148,7 @@ export class VodService {
 
   getBaseTableData4Language(vodArrayIdHas: Vod[]) {
     const languageBean = new LanguageBean();
-    vodArrayIdHas.map(({ language, id }) => {
+    return vodArrayIdHas.map(({ language, id }) => {
       const languages = language.map((lang) => {
         return {
           ...languageBean,
@@ -161,7 +165,7 @@ export class VodService {
 
   getBaseTableData4Genre(vodArrayIdHas: Vod[]) {
     const genreBean = new GenreBean();
-    vodArrayIdHas.map(({ genres, id }) => {
+    return vodArrayIdHas.map(({ genres, id }) => {
       const genreList = genres.map((genre) => {
         return {
           ...genreBean,
@@ -177,12 +181,111 @@ export class VodService {
     });
   }
 
+  getBaseTableData4PlaySource(vodArrayIdHas: Vod[]) {
+    const genreBean = new PlaySourceBean();
+    return vodArrayIdHas.map(({ id, playSources, seasons }) => {
+      const vodPlayUrls: PlaySourceBean[] = playSources.map((item) => {
+        return {
+          ...genreBean,
+          id: item.id,
+          type: item.type,
+          url: item.url,
+          vodId: id,
+          quality: item.quality,
+          duration: item.duration || 0,
+        };
+      });
+
+      const episodePlayUrl = seasons.map(({ episodes }) => {
+        return episodes.map(({ id, playUrl }) => {
+          return {
+            ...genreBean,
+            id: uuidv4(),
+            type: 3,
+            url: playUrl,
+            vodId: id,
+          };
+        });
+      });
+      const onFlattenEpisodeList = this.helper.flatten(episodePlayUrl, 2);
+      return [...onFlattenEpisodeList, ...vodPlayUrls];
+    });
+  }
+
   async inertAllVodInfosBatch(vods: Vod[]) {
     const vodArrayIdHas = this.helper.setArrayId<Vod>(vods);
-    console.log(this.getBaseTableData4Vod(vodArrayIdHas));
-    console.log(this.getBaseTableData4Images(vodArrayIdHas));
-    console.log(this.getBaseTableData4CastStaff(vodArrayIdHas));
-    console.log(this.getBaseTableData4Language(vodArrayIdHas));
-    console.log(this.getBaseTableData4Genre(vodArrayIdHas));
+
+    const baseTableVods = this.getBaseTableData4Vod(vodArrayIdHas);
+    await this.vodsqlSerivce.saveTable(baseTableVods, 'lemon_b_vod');
+
+    const baseTableImgs = this.getBaseTableData4Images(vodArrayIdHas);
+    await this.vodsqlSerivce.saveTable(baseTableImgs, 'lemon_b_image');
+
+    const baseCastStaff = this.getBaseTableData4CastStaff(vodArrayIdHas);
+    const allCastStaffs = this.helper.flatten(
+      baseCastStaff.map((item) => item.castStaffs),
+    );
+    await this.vodsqlSerivce.saveTable(allCastStaffs, 'lemon_b_cast_staff');
+    const allCastStaffsId = this.helper.flatten(
+      baseCastStaff.map((item) => {
+        const castIds = item.castStaffs.map((cast) => {
+          return {
+            id: uuidv4(),
+            castId: cast.id,
+            vodId: item.vodId,
+          };
+        });
+        return castIds;
+      }),
+    );
+
+    await this.vodsqlSerivce.saveTable(allCastStaffsId, 'lemon_link_vod_cast');
+
+    const languages = this.getBaseTableData4Language(vodArrayIdHas);
+    const allLanguages = this.helper.flatten(
+      languages.map((item) => item.languages),
+    );
+    await this.vodsqlSerivce.saveTable(allLanguages, 'lemon_b_language');
+    const allLanguageId = this.helper.flatten(
+      languages.map((item) => {
+        const castIds = item.languages.map((lan) => {
+          return {
+            id: uuidv4(),
+            languageId: lan.id,
+            vodId: item.vodId,
+          };
+        });
+        return castIds;
+      }),
+    );
+    await this.vodsqlSerivce.saveTable(
+      allLanguageId,
+      'lemon_link_vod_language',
+    );
+
+    const genres = this.getBaseTableData4Genre(vodArrayIdHas);
+    const allGenres = this.helper.flatten(genres.map((item) => item.genres));
+    await this.vodsqlSerivce.saveTable(allGenres, 'lemon_b_genre');
+    const allGenreIds = this.helper.flatten(
+      genres.map((item) => {
+        const gIds = item.genres.map((lan) => {
+          return {
+            id: uuidv4(),
+            generId: lan.id,
+            vodId: item.vodId,
+          };
+        });
+        return gIds;
+      }),
+    );
+    await this.vodsqlSerivce.saveTable(allGenreIds, 'lemon_link_vod_genre');
+    const dataPlaySource = this.getBaseTableData4PlaySource(vodArrayIdHas);
+    await this.vodsqlSerivce.saveTable(
+      this.helper.flatten(dataPlaySource),
+      'lemon_b_playsource',
+    );
+    return {
+      message: '新增成功',
+    };
   }
 }

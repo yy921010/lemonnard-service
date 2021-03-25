@@ -20,8 +20,8 @@ export class Vod {
     this.introduce = '';
     this.year = '';
     this.rating = -1;
-    this.updateTime = '';
-    this.createTime = '';
+    this.updateTime = 'CURRENT_TIME';
+    this.createTime = 'CURRENT_TIME';
     this.episodeNumber = -1;
     this.fromType = -1;
     this.cId = '';

@@ -90,12 +90,6 @@ export class VodController {
             url: 'http://demo.url',
             quality: 'hd',
           },
-          {
-            type: 3,
-            comment: '电视剧',
-            url: 'http://demo.url',
-            episodeId: 'ssss',
-          },
         ],
         seasons: [
           {
@@ -107,6 +101,7 @@ export class VodController {
                 episodeNumber: 1,
                 title: '第一集',
                 introduce: '第一集介绍',
+                playUrl: 'http://demo.playUrl',
                 images: [
                   {
                     type: 1,
@@ -125,6 +120,7 @@ export class VodController {
                 episodeNumber: 2,
                 title: '第一集',
                 introduce: '第一集介绍',
+                playUrl: 'http://demo.playUrl2',
                 images: [
                   {
                     type: 1,
@@ -208,12 +204,6 @@ export class VodController {
             url: 'http://demo.url',
             quality: 'hd',
           },
-          {
-            type: 3,
-            comment: '电视剧',
-            url: 'http://demo.url',
-            episodeId: 'ssss',
-          },
         ],
         seasons: [
           {
@@ -225,6 +215,7 @@ export class VodController {
                 episodeNumber: 1,
                 title: '第一集',
                 introduce: '第一集介绍',
+                playUrl: 'http://demo.playUrl21',
                 images: [
                   {
                     type: 1,
@@ -243,6 +234,7 @@ export class VodController {
                 episodeNumber: 2,
                 title: '第一集',
                 introduce: '第一集介绍',
+                playUrl: 'http://demo.playUrl23',
                 images: [
                   {
                     type: 1,

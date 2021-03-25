@@ -12,4 +12,6 @@ export class Episode {
   introduce: string;
   @ValidateNested()
   images: Image[];
+  @IsString()
+  playUrl?: string;
 }

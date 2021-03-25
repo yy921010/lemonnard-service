@@ -8,8 +8,8 @@ export class GenreBean {
   constructor() {
     this.type = -1;
     this.id = '';
-    this.updateTime = '';
-    this.createTime = '';
+    this.updateTime = 'CURRENT_TIME';
+    this.createTime = 'CURRENT_TIME';
     this.deleted = 0;
   }
 }

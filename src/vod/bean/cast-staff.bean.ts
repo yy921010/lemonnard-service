@@ -9,8 +9,8 @@ export class CastStaffBean {
   constructor() {
     this.id = '';
     this.type = -1;
-    this.updateTime = '';
-    this.createTime = '';
+    this.updateTime = 'CURRENT_TIME';
+    this.createTime = 'CURRENT_TIME';
     this.deleted = 0;
   }
 }

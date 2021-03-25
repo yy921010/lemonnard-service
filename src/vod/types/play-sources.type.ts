@@ -9,6 +9,6 @@ export class PlaySource {
   comment: string;
   @IsString()
   url: string;
-  @IsString()
-  episodeId?: string;
+  @IsNumber()
+  duration?: number;
 }
