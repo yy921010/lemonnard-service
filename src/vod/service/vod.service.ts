@@ -1,7 +1,6 @@
 import { Log4JService } from '@/common';
 import { Injectable } from '@nestjs/common';
 import { Logger } from 'log4js';
-import { SqlGenerator } from 'mysqlnard';
 import { Vod } from '../types/vod.type';
 import { Vod as VodBean } from '../bean/vod.bean';
 import { HelperService } from '@/helper';
@@ -22,11 +21,15 @@ export class VodService {
     private readonly log4j: Log4JService,
     private readonly helper: HelperService,
     private readonly mysql: MysqlService,
-    private readonly vodsqlSerivce: VodSqlService,
+    private readonly vodSqlService: VodSqlService,
   ) {
     this.logger = this.log4j.getLogger(VodService.name);
   }
 
+  /**
+   * 封装vod info
+   * @param vodArrayIdHas
+   */
   getBaseTableData4Vod(vodArrayIdHas: Vod[]) {
     this.logger.info('[insertImages] enter getBaseTableData4Vod >>>>');
     const vodBean = new VodBean();
@@ -77,6 +80,10 @@ export class VodService {
     return this.helper.flatten(vodMapFields, 2);
   }
 
+  /**
+   * 获得所有图片
+   * @param vodArrayIdHas
+   */
   getBaseTableData4Images(vodArrayIdHas: Vod[]) {
     this.logger.info('[insertImages] enter getBaseTableData4Images >>>>');
     const imageBean = new Image();
@@ -214,41 +221,50 @@ export class VodService {
 
   async inertAllVodInfosBatch(vods: Vod[]) {
     const vodArrayIdHas = this.helper.setArrayId<Vod>(vods);
-
+    // 存储影片
     const baseTableVods = this.getBaseTableData4Vod(vodArrayIdHas);
-    await this.vodsqlSerivce.saveTable(baseTableVods, 'lemon_b_vod');
-
+    await this.vodSqlService.saveTable(baseTableVods, 'lemon_b_vod');
+    //存储图片
     const baseTableImgs = this.getBaseTableData4Images(vodArrayIdHas);
-    await this.vodsqlSerivce.saveTable(baseTableImgs, 'lemon_b_image');
+    await this.vodSqlService.saveTable(baseTableImgs, 'lemon_b_image');
 
     const baseCastStaff = this.getBaseTableData4CastStaff(vodArrayIdHas);
     const allCastStaffs = this.helper.flatten(
       baseCastStaff.map((item) => item.castStaffs),
     );
-    await this.vodsqlSerivce.saveTable(allCastStaffs, 'lemon_b_cast_staff');
+    //存储演员
+    const castStaffResults = await this.vodSqlService.findAndSave(
+      allCastStaffs,
+      'lemon_b_cast_staff',
+      'name',
+      'type',
+    );
     const allCastStaffsId = this.helper.flatten(
       baseCastStaff.map((item) => {
-        const castIds = item.castStaffs.map((cast) => {
+        return castStaffResults.map((cast) => {
           return {
             id: uuidv4(),
             castId: cast.id,
             vodId: item.vodId,
           };
         });
-        return castIds;
       }),
     );
+    // 演员和影片的关联关系
+    await this.vodSqlService.saveTable(allCastStaffsId, 'lemon_link_vod_cast');
 
-    await this.vodsqlSerivce.saveTable(allCastStaffsId, 'lemon_link_vod_cast');
-
-    const languages = this.getBaseTableData4Language(vodArrayIdHas);
+    const languagesBase = this.getBaseTableData4Language(vodArrayIdHas);
     const allLanguages = this.helper.flatten(
-      languages.map((item) => item.languages),
+      languagesBase.map((item) => item.languages),
     );
-    await this.vodsqlSerivce.saveTable(allLanguages, 'lemon_b_language');
+    const languageResults = await this.vodSqlService.findAndSave(
+      allLanguages,
+      'lemon_b_language',
+      'name',
+    );
     const allLanguageId = this.helper.flatten(
-      languages.map((item) => {
-        const castIds = item.languages.map((lan) => {
+      languagesBase.map((item) => {
+        const castIds = languageResults.map((lan) => {
           return {
             id: uuidv4(),
             languageId: lan.id,
@@ -258,29 +274,35 @@ export class VodService {
         return castIds;
       }),
     );
-    await this.vodsqlSerivce.saveTable(
+    await this.vodSqlService.saveTable(
       allLanguageId,
       'lemon_link_vod_language',
     );
 
-    const genres = this.getBaseTableData4Genre(vodArrayIdHas);
-    const allGenres = this.helper.flatten(genres.map((item) => item.genres));
-    await this.vodsqlSerivce.saveTable(allGenres, 'lemon_b_genre');
+    const genresBase = this.getBaseTableData4Genre(vodArrayIdHas);
+    const allGenres = this.helper.flatten(
+      genresBase.map((item) => item.genres),
+    );
+    const genresResults = await this.vodSqlService.findAndSave(
+      allGenres,
+      'lemon_b_genre',
+      'name',
+    );
     const allGenreIds = this.helper.flatten(
-      genres.map((item) => {
-        const gIds = item.genres.map((lan) => {
+      genresBase.map((item) => {
+        const gIds = genresResults.map((genre) => {
           return {
             id: uuidv4(),
-            generId: lan.id,
+            genreId: genre.id,
             vodId: item.vodId,
           };
         });
         return gIds;
       }),
     );
-    await this.vodsqlSerivce.saveTable(allGenreIds, 'lemon_link_vod_genre');
+    await this.vodSqlService.saveTable(allGenreIds, 'lemon_link_vod_genre');
     const dataPlaySource = this.getBaseTableData4PlaySource(vodArrayIdHas);
-    await this.vodsqlSerivce.saveTable(
+    await this.vodSqlService.saveTable(
       this.helper.flatten(dataPlaySource),
       'lemon_b_playsource',
     );
