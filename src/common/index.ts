@@ -4,3 +4,4 @@ export * from './interface/config.interface';
 export * from './interceptor/http-time.interceptor';
 export * from './common.module';
 export * from './middleware/http-request.middleware';
+export * from './interface/page-info.interface';

@@ -1,4 +1,4 @@
-import { Log4JService } from '@/common';
+import { Log4JService, PageInfo } from '@/common';
 import { Injectable } from '@nestjs/common';
 import { Logger } from 'log4js';
 import { Vod } from '../types/vod.type';
@@ -12,6 +12,7 @@ import { GenreBean } from '@/vod/bean/genre.bean';
 import { PlaySourceBean } from '@/vod/bean/play-source.bean';
 import { v4 as uuidv4 } from 'uuid';
 import { VodSqlService } from '@/vod/service/vod-sql.service';
+import { SqlGenerator } from 'mysqlnard';
 
 @Injectable()
 export class VodService {
@@ -309,5 +310,48 @@ export class VodService {
     return {
       message: '新增成功',
     };
+  }
+
+  async getVod({ pageSize = '20', pageNumber = '1' }): Promise<PageInfo> {
+    const numberIndex = +pageNumber - 1 <= 0 ? 0 : +pageNumber - 1;
+    const size = +pageSize;
+    const vodList = await this.mysql.execute<Vod[]>(
+      new SqlGenerator('select')
+        .from('lemon_b_vod')
+        .limit(numberIndex * size, size)
+        .where({
+          deleted: 0,
+          from_type: 12,
+        })
+        .build(),
+    );
+
+    const listCount = await this.mysql.execute<Vod[]>(
+      new SqlGenerator('select')
+        .field('count(id)')
+        .from('lemon_b_vod')
+        .where({
+          deleted: 0,
+          from_type: 12,
+        })
+        .build(),
+    );
+    this.logger.debug('[getVod] listCount=', listCount);
+    return {
+      size: +pageSize,
+      current: +pageNumber,
+      list: vodList.map((item) => this.helper.toCamelCameField(item)),
+      total: listCount[0]['count(id)'],
+    };
+  }
+
+  getVodInfoById(id: string) {
+    new SqlGenerator('select').from(
+      'lemon_b_vod',
+      'lemon_b_image',
+      'lemon_b_cast_staff',
+      'lemon_b_genre',
+      'lemon_b_language',
+    );
   }
 }

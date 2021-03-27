@@ -1,5 +1,5 @@
 import { Log4JService } from '@/common';
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { Logger } from 'log4js';
 import { VodService } from '../service/vod.service';
 import { Vod } from '../types/vod.type';
@@ -15,6 +15,21 @@ export class VodController {
   }
 
   @Get()
+  async getVod(
+    @Query('pageSize') pageSize: string,
+    @Query('pageNumber') pageNumber: string,
+    @Query('id') id: string,
+  ) {
+    if (id) {
+      return this.vodService.getVodInfoById(id);
+    }
+    return this.vodService.getVod({
+      pageSize,
+      pageNumber,
+    });
+  }
+
+  @Post()
   async saveVod(@Body() vodInfo: Vod) {
     this.logger.info('[saveVod] vodInfo = ', vodInfo);
     return await this.vodService.inertAllVodInfosBatch([
